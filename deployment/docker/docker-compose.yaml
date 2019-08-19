@@ -1,0 +1,42 @@
+version: "3"
+services:
+  reverseproxy:
+      image: ratchadj2016/cloud-developer-my-instagram-reverseproxy:latest
+      ports:
+          - 8080:8080
+      restart: always
+      depends_on:
+        - backend-user
+        - backend-feed     
+  backend-user:
+    image: ratchadj2016/cloud-developer-my-instagram-restapi-user:latest
+    environment:
+      POSTGRESS_USERNAME: $POSTGRESS_USERNAME
+      POSTGRESS_PASSWORD: $POSTGRESS_PASSWORD 
+      POSTGRESS_DB: $POSTGRESS_DB 
+      POSTGRESS_HOST: $POSTGRESS_HOST 
+      AWS_REGION: $AWS_REGION 
+      AWS_PROFILE: $AWS_PROFILE 
+      AWS_BUCKET: $AWS_BUCKET
+      JWT_SECRET: $JWT_SECRET
+      URL: $FRONTEND_URL
+  backend-feed:
+    # build: ./restapi-feed/
+    image: ratchadj2016/cloud-developer-my-instagram-restapi-feed:latest
+    volumes:
+      - $HOME/.aws:/root/.aws
+    environment:
+      POSTGRESS_USERNAME: $POSTGRESS_USERNAME
+      POSTGRESS_PASSWORD: $POSTGRESS_PASSWORD
+      POSTGRESS_DB: $POSTGRESS_DB
+      POSTGRESS_HOST: $POSTGRESS_HOST
+      AWS_REGION: $AWS_REGION 
+      AWS_PROFILE: $AWS_PROFILE 
+      AWS_BUCKET: $AWS_BUCKET
+      JWT_SECRET: $JWT_SECRET
+      URL: $FRONTEND_URL
+  frontend:
+    image: ratchadj2016/cloud-developer-my-instagram-frontend:local
+    # build: ./frontend
+    ports:
+      - "8100:80"

@@ -1,0 +1,18 @@
+version: "3"
+services:
+  reverseproxy:
+    build:
+      context: .
+    image: ratchadj2016/cloud-developer-my-instagram-reverseproxy 
+  backend_user:
+    build:
+      context: ../../restapi-user
+    image: ratchadj2016/cloud-developer-my-instagram-restapi-user
+  backend_feed:
+    build:
+      context: ../../restapi-feed  
+    image: ratchadj2016/cloud-developer-my-instagram-restapi-feed
+  frontend:
+    build:
+      context: ../../frontend  
+    image: ratchadj2016/cloud-developer-my-instagram-frontend:local
